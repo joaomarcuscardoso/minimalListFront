@@ -32,9 +32,16 @@ export type IErrorMessage = {
   status: number
   error: string
   login?: IErrorLogin
+  register?: IErrorRegister
 }
 
 export type IErrorLogin = {
-  email: string
-  password: string
+  email?: string
+  password?: string
+}
+
+export type IErrorRegister = {
+  email?: string
+  nickname?: string
+  password?: string
 }

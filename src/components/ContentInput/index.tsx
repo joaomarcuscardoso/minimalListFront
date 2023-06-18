@@ -30,7 +30,7 @@ export function ContentInput({
         {`${text}: `}
       </label>
 
-      {(error && !state) && (
+      {(error) && (
         <span id={label} className="span-error">
           {`  ${error}`}
         </span>

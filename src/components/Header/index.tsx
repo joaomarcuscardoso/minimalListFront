@@ -39,7 +39,7 @@ export function Header() {
                 Conta 
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><Link className="dropdown-item" to="/Login">Login</Link></li>
+                <li><Link className="dropdown-item" to="/login">Login</Link></li>
                 <li><Link className="dropdown-item" to="/profile">Perfil</Link></li>
                 <li><a className="dropdown-item" onClick={handleLogout}>Logout</a></li>
                 <li><Link className="dropdown-item" to="/register">Resgistrar</Link></li>

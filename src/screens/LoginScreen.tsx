@@ -10,7 +10,7 @@ import { API_URL } from "types/apiURL"
 
 export function LoginScreen() {
   const navigate = useNavigate()
-  const [cookies, setCookie] = useCookies(["user"])
+  const [cookies, setCookie] = useCookies()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -25,6 +25,9 @@ export function LoginScreen() {
     e.preventDefault()
 
     if (email && password) {
+      setEmailError("")
+      setPasswordError("")
+
       axios.post<IUser>(`${API_URL}/api/user/login`, {
         email: email,
         password: password
