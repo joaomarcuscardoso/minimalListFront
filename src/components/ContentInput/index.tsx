@@ -7,32 +7,48 @@ type Props = {
   classContainer?: string;
   name: string;
   state: string,
+  required?: boolean
   setState: (e: string) => void,
+  error?: string
 };
 export function ContentInput({
-  label, 
+  label,
   name,
   text,
   type,
   placeholder,
   classContainer,
-  classInput, 
+  classInput,
   state,
   setState,
+  required = false,
+  error
 }: Props) {
   return (
-    <div className={`form-group ${classContainer ?? "" }`}>
-      <label htmlFor={label} className="label">{text}</label>
-      <input 
-        type={type} 
-        name={name} 
-        className={`form-control input-form ${classInput ?? ""}`} 
-        id={label} 
-        aria-describedby={label} 
-        placeholder={placeholder} 
-        onChange={(e) => setState(e.target.value)}
-        value={state}
-      />
+    <div className={`form-group ${classContainer ?? ""}`}>
+      <label htmlFor={label} className="form-label">
+        {`${text}: `}
+      </label>
+
+      {(error && !state) && (
+        <span id={label} className="span-error">
+          {`  ${error}`}
+        </span>
+      )}
+      <div className="input-group has-validation">
+        {name == "nickname" && <span className="input-group-text" id="inputGroupPrepend">@</span>}
+        <input
+          type={type}
+          name={name}
+          className={`form-control input-form ${classInput ?? ""}`}
+          id={label}
+          aria-describedby={label}
+          placeholder={placeholder}
+          onChange={(e) => setState(e.target.value)}
+          value={state}
+          required={required}
+        />
+      </div>
     </div>
   )
 }

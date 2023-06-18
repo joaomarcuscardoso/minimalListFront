@@ -77,3 +77,10 @@ nav {
 .button-form-link {
   margin-bottom: 10px;
 }
+
+.span-error {
+  color: red;
+  font-size: 12px;
+  font-family: 'Times New Roman, Times, serif';
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import { Header } from "./components/Header"
 import { Footer } from "./components/Footer"
 import "./assets/css/global/styles.css"
+import "./assets/js/script.js"
 import { Route, Routes } from "react-router-dom"
 import { HomeScreen } from "screens/HomeScreen"
 import { ProfileScreen } from "screens/ProfileScreen"

@@ -1,11 +1,17 @@
 type Props = {
-  children: React.ReactNode;
+  error?: string
+  children: React.ReactNode
 }
 
-export function Form({children} : Props) {
+export function Form({error, children} : Props) {
   return (
     <div className="container-fluid">
-      <form>
+      <form className="needs-validation">
+        {error && 
+          <div className="alert alert-danger" role="alert" id="errorMessage">
+            {error}
+          </div>
+        }
         {children}
       </form>
     </div>
