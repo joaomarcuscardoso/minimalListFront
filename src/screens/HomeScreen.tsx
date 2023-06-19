@@ -1,17 +1,20 @@
 import { Form } from "components/Form"
 import { useCookies } from "react-cookie"
-import { IContent, IUser } from "types"
+import { ICategory, IContent, IUser } from "types"
 import { ImSearch } from "react-icons/im"
 import { useEffect, useState } from "react"
 import { ContainerCard } from "components/ContainerCard"
 import { Card } from "components/Card"
 import axios from "axios"
 import { API_URL } from "types/apiURL"
+import { Link } from "react-router-dom"
 
 export function HomeScreen() {
   const [cookies, setCookie] = useCookies()
   const [search, setSearch] = useState("")
   const [cards, setCards] = useState<IContent[][]>([])
+  const [seasons, setSeasons] = useState<number[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([])
   const user: IUser = cookies?.user as IUser
   const countCards = 0
 
@@ -29,9 +32,22 @@ export function HomeScreen() {
         return response.data
       })
       .catch((error) => console.error(error))
+
+    axios.get<number[]>(`${API_URL}/api/content/getSeason`)
+      .then((response) => {
+        setSeasons(response.data)
+        return response.data
+      })
+      .catch((error) => console.error(error))
+    
+    axios.get<ICategory[]>(`${API_URL}/api/category`)
+      .then((response) => {
+        setCategories(response.data)
+        return response.data
+      })
+      .catch((error) => console.error(error))
   }, [])
 
-  console.log(cards)
   return (
     <div className="container-fluid" id="content-main">
       <div className="row">
@@ -45,9 +61,11 @@ export function HomeScreen() {
         <div className="col-4">
           <div className="select-container">
             <Form>
-              <select className="form-select" aria-label="Categoria">
-                <option selected>Selecione uma categoria</option>
-                <option value="1">Ação</option>
+              <select className="form-select" aria-label="Season">
+                <option selected>Selecione uma season</option>
+                {seasons.map((season: number, key) => (
+                  <option key={key} value={season}>{season}</option>
+                ))}
               </select>
             </Form>
           </div>
@@ -82,9 +100,9 @@ export function HomeScreen() {
                 >
                   <h5 className="card-title">{content?.title}</h5>
                   <p className="card-text">{content?.description}</p>
-                  <a href="#" className="btn btn-primary">
+                  <Link to={`/content/${content.id}`} className="btn btn-primary">
                     Ver mais
-                  </a>
+                  </Link>
                 </Card>
               ) : null
             ))}
