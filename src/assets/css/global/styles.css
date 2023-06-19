@@ -8,7 +8,17 @@ body {
 #container-app {
   padding:0;
 }
+.container {
+  padding: 0;
+  margin: 0;
+}
 
+.container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+/* HEADER */
 nav {
   padding: 5px;
 }
@@ -31,9 +41,6 @@ nav {
   z-index: 0;
 }
 
-/*
-* showing inside input
-* */
 #searchBtn {
   position: absolute;
   top: 0;
@@ -53,6 +60,10 @@ nav {
   color: black;
   height: 15px;
   width: 15px;
+}
+
+#link {
+  cursor: pointer;
 }
 
 .title {
@@ -82,5 +93,69 @@ nav {
   color: red;
   font-size: 12px;
   font-family: 'Times New Roman, Times, serif';
-  text-align: center;
+  text-align: center
+}
+
+
+/**
+* HOME
+*/
+.image-main {
+  width: 100%;
+  height: 450px;
+}
+.image-main img {
+  width: 100%;
+  height: 100%;
+}
+/* Card */
+#content-main {
+  background: #131313;
+  padding: 20px;
+}
+
+#container-select {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  background-color: #303030;
+}
+
+#container-cards {
+  margin: 15px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.card-container { 
+  margin: 15px;
+  display: flex;
+  flex-basis: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-items: center;
+}
+
+.image-card {
+  width: 100%;
+  min-height: 450px!important;
+  max-height: 450px!important;
+}
+
+.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

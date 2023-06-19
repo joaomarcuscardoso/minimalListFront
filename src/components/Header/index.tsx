@@ -1,10 +1,14 @@
-import { useState} from "react"
+import { useState } from "react"
+import { useCookies } from "react-cookie"
 import { ImSearch } from "react-icons/im"
 import { Link, useNavigate } from "react-router-dom"
+import { IUser } from "types"
 
 export function Header() {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
+  const [cookies, setCookie] = useCookies()
+  let user: IUser = cookies?.user as IUser
 
   function handleSearch(event: React.FormEvent) {
     event.preventDefault()
@@ -12,6 +16,8 @@ export function Header() {
   }
 
   function handleLogout() {
+    setCookie("user", null, { path: "/" })
+    user = cookies.user as IUser
     navigate("/")
   }
 
@@ -36,16 +42,24 @@ export function Header() {
             </li>
             <li className="nav-item dropdown ml-10">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Conta 
+                Conta
               </a>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><Link className="dropdown-item" to="/login">Login</Link></li>
-                <li><Link className="dropdown-item" to="/profile">Perfil</Link></li>
-                <li><a className="dropdown-item" onClick={handleLogout}>Logout</a></li>
-                <li><Link className="dropdown-item" to="/register">Resgistrar</Link></li>
-              </ul>
             </li>
 
+          </ul>
+          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+            {user.id ? (
+              <>
+                <li><Link className="dropdown-item" to="/profile">Perfil</Link></li>
+                <li><a className="dropdown-item" id="link" onClick={handleLogout}>Logout</a></li>
+              </>
+            ) : (
+              <>
+                <li><Link className="dropdown-item" to="/login">Login</Link></li>
+                <li><Link className="dropdown-item" to="/register">Resgistrar</Link></li>
+
+              </>
+            )}
           </ul>
           <ul className="navbar-nav mb-2 mb-lg-0">
             <li>

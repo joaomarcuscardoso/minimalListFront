@@ -24,8 +24,37 @@ export type IReview = {
   updatedAt?: Date
 }
 
+export type IContent = {
+  id: number
+  name: string
+  season: number
+  image: string
+  title: string
+  description?: string
+  reviews?: IReview[]
+  categories?: ICategory[]
+  produce: boolean
+  date?: Date
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export type ICategory = {
+  id: number
+  name: string
+  Content?: IContent[]
+  createdAt?: Date
+  updatedAt?: Date
+}
+
 export type IAchievements = {
   id?: number
+  user: IUser
+  name: string
+  icon: string
+  status: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type IErrorMessage = {
