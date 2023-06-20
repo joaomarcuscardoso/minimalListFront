@@ -6,7 +6,7 @@ type Props = {
 export function Form({error, children} : Props) {
   return (
     <div className="container-fluid">
-      <form className="needs-validation">
+      <form>
         {error && 
           <div className="alert alert-danger" role="alert" id="errorMessage">
             {error}

@@ -15,20 +15,14 @@ export function HomeScreen() {
   const [cards, setCards] = useState<IContent[][]>([])
   const [seasons, setSeasons] = useState<number[]>([])
   const [categories, setCategories] = useState<ICategory[]>([])
+  const [selectedSeason, setSelectedSeason] = useState<number | undefined>()
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
   const user: IUser = cookies?.user as IUser
-  const countCards = 0
 
   useEffect(() => {
     axios.get<IContent[]>(`${API_URL}/api/content`)
       .then((response) => {
-        const chunkSize = 3
-        const slicedData: IContent[][] = []
-
-        for (let i = 0; i < response.data.length; i += chunkSize) {
-          slicedData.push(response.data.slice(i, i + chunkSize))
-        }
-
-        setCards(slicedData)
+        formatCards(response.data)
         return response.data
       })
       .catch((error) => console.error(error))
@@ -39,7 +33,7 @@ export function HomeScreen() {
         return response.data
       })
       .catch((error) => console.error(error))
-    
+
     axios.get<ICategory[]>(`${API_URL}/api/category`)
       .then((response) => {
         setCategories(response.data)
@@ -47,6 +41,44 @@ export function HomeScreen() {
       })
       .catch((error) => console.error(error))
   }, [])
+
+  const formatCards = (cards: IContent[]) => {
+    const chunkSize = 3
+    const slicedData: IContent[][] = []
+
+    for (let i = 0; i < cards.length; i += chunkSize) {
+      slicedData.push(cards.slice(i, i + chunkSize))
+    }
+
+    setCards(slicedData)
+  }
+
+  const handleSelectSeason = (e: number) => {
+    setSelectedSeason(e)
+
+    let search = `season=${e}`
+    if (selectedCategory) {
+      search += `&category=${selectedCategory}`
+    }
+
+    axios.get<IContent[]>(`${API_URL}/api/content/search?${search}`)
+      .then(response => {
+        formatCards(response.data)
+      }).catch((error) => console.error(error))
+  }
+
+  const handleSelectCategory = (e: number) => {
+    setSelectedCategory(e)
+    let search = `category=${e}`
+    if (selectedSeason) {
+      search += `&season=${selectedSeason}`
+    }
+
+    axios.get<IContent[]>(`${API_URL}/api/content/search?${search}`)
+      .then(response => {
+        formatCards(response.data)
+      }).catch((error) => console.error(error))
+  }
 
   return (
     <div className="container-fluid" id="content-main">
@@ -61,8 +93,12 @@ export function HomeScreen() {
         <div className="col-4">
           <div className="select-container">
             <Form>
-              <select className="form-select" aria-label="Season">
-                <option selected>Selecione uma season</option>
+              <select
+                className="form-select"
+                aria-label="Season"
+                onChange={(e) => handleSelectSeason(Number(e.target.value))}
+              >
+                <option selected disabled value="">Selecione uma season</option>
                 {seasons.map((season: number, key) => (
                   <option key={key} value={season}>{season}</option>
                 ))}
@@ -72,9 +108,15 @@ export function HomeScreen() {
         </div>
         <div className="col-4">
           <Form>
-            <select className="form-select" aria-label="Categoria">
+            <select
+              className="form-select"
+              aria-label="Categoria"
+              onChange={(e) => handleSelectCategory(Number(e.target.value))}
+            >
               <option selected>Selecione uma categoria</option>
-              <option value="1">Ação</option>
+              {categories.map((category: ICategory, key) => (
+                <option key={key} value={category.id}>{category.name}</option>
+              ))}
             </select>
           </Form>
         </div>

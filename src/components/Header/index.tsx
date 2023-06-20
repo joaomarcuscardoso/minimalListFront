@@ -17,7 +17,7 @@ export function Header() {
 
   function handleLogout() {
     setCookie("user", null, { path: "/" })
-    user = cookies.user as IUser
+    user = cookies?.user as IUser
     navigate("/")
   }
 
@@ -40,26 +40,19 @@ export function Header() {
             <li className="nav-item">
               <Link to="/review" className="nav-link">Review</Link>
             </li>
-            <li className="nav-item dropdown ml-10">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Conta
-              </a>
-            </li>
-
-          </ul>
-          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-            {user.id ? (
+            {user?.id ? (
               <>
-                <li><Link className="dropdown-item" to="/profile">Perfil</Link></li>
-                <li><a className="dropdown-item" id="link" onClick={handleLogout}>Logout</a></li>
+                <li className="nav-item"><a className="nav-link" id="link" onClick={handleLogout}>Logout</a></li>
+                <li className="nav-item"><Link className="nav-link" to="/profile">Perfil</Link></li>
               </>
             ) : (
               <>
-                <li><Link className="dropdown-item" to="/login">Login</Link></li>
-                <li><Link className="dropdown-item" to="/register">Resgistrar</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/register">Resgistrar</Link></li>
 
               </>
             )}
+
           </ul>
           <ul className="navbar-nav mb-2 mb-lg-0">
             <li>

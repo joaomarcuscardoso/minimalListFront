@@ -35,7 +35,7 @@ export function ContentInput({
           {`  ${error}`}
         </span>
       )}
-      <div className="input-group has-validation">
+      <div className="input-group">
         {name == "nickname" && <span className="input-group-text" id="inputGroupPrepend">@</span>}
         <input
           type={type}
