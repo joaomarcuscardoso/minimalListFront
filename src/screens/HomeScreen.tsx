@@ -53,28 +53,26 @@ export function HomeScreen() {
     setCards(slicedData)
   }
 
-  const handleSelectSeason = (e: number) => {
-    setSelectedSeason(e)
+  useEffect(() => {
+    handleFilters()
+  }, [selectedSeason, selectedCategory, search])
 
-    let search = `season=${e}`
-    if (selectedCategory) {
-      search += `&category=${selectedCategory}`
-    }
+  const handleFilters = () => {
+    let filter = ""
 
-    axios.get<IContent[]>(`${API_URL}/api/content/search?${search}`)
-      .then(response => {
-        formatCards(response.data)
-      }).catch((error) => console.error(error))
-  }
-
-  const handleSelectCategory = (e: number) => {
-    setSelectedCategory(e)
-    let search = `category=${e}`
     if (selectedSeason) {
-      search += `&season=${selectedSeason}`
+      filter += `season=${selectedSeason}`
     }
 
-    axios.get<IContent[]>(`${API_URL}/api/content/search?${search}`)
+    if (selectedCategory) {
+      filter += `&category=${selectedCategory}`
+    }
+
+    if (selectedCategory) {
+      filter += `&title=${search}&name=${search}`
+    }
+
+    axios.get<IContent[]>(`${API_URL}/api/content/search?${filter}`)
       .then(response => {
         formatCards(response.data)
       }).catch((error) => console.error(error))
@@ -96,9 +94,9 @@ export function HomeScreen() {
               <select
                 className="form-select"
                 aria-label="Season"
-                onChange={(e) => handleSelectSeason(Number(e.target.value))}
+                onChange={(e) => setSelectedSeason(Number(e.target.value))}
               >
-                <option selected disabled value="">Selecione uma season</option>
+                <option selected value="">Selecione uma season</option>
                 {seasons.map((season: number, key) => (
                   <option key={key} value={season}>{season}</option>
                 ))}
@@ -111,7 +109,7 @@ export function HomeScreen() {
             <select
               className="form-select"
               aria-label="Categoria"
-              onChange={(e) => handleSelectCategory(Number(e.target.value))}
+              onChange={(e) => setSelectedCategory(Number(e.target.value))}
             >
               <option selected>Selecione uma categoria</option>
               {categories.map((category: ICategory, key) => (
