@@ -65,11 +65,13 @@ export function HomeScreen() {
     }
 
     if (selectedCategory) {
-      filter += `&category=${selectedCategory}`
+      if (filter) filter += "&"
+      filter += `category=${selectedCategory}`
     }
 
-    if (selectedCategory) {
-      filter += `&title=${search}&name=${search}`
+    if (search) {
+      if (filter) filter += "&"
+      filter += `title=${search}&name=${search}`
     }
 
     axios.get<IContent[]>(`${API_URL}/api/content/search?${filter}`)
