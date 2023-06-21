@@ -7,6 +7,7 @@ import { ProfileScreen } from "screens/ProfileScreen"
 import { ReviewScreen } from "screens/ReviewScreen"
 import { LoginScreen } from "screens/LoginScreen"
 import { RegisterScreen } from "screens/RegisterScreen"
+import { ContentScreen } from "screens/ContentScreen"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/review" element={<ReviewScreen />} />
+          <Route path="/content/:id" element={<ContentScreen />} />
         </Routes>
       </div>
       <Footer />

@@ -159,3 +159,43 @@ nav {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/** Content **/
+.content-container {
+  background-color: #303030;
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+}
+
+.content-container-mains {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+.content-info-header {
+  display: flex;
+  flex-direction: row;
+}
+
+/** Put in center and end **/
+.content-info-main {
+  display: flex;
+  text-align: center;
+  align-items: end;
+}
+.content-info-main p {
+  margin-right: 5px;
+  font-size: 13px;
+}
+.content-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  font-size: 14px;
+}
+#content-info-desc {
+  margin-top: -10px;
+  width: 100%;
+}

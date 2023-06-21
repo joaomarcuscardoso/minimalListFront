@@ -33,6 +33,7 @@ export type IContent = {
   description?: string
   reviews?: IReview[]
   category: ICategory
+  categoryName?: string
   produce: boolean
   date?: Date
   createdAt?: Date
