@@ -6,8 +6,8 @@ export type IUser = {
   background?: string
   token?: string
   imagePath?: string
-  imagePathComplete?: string
-  backgroundPathComplete?: string
+  imagePathComplete: string
+  backgroundPathComplete: string
   createdAt?: Date
   updatedAt?: Date
   reviews?: IReview[]

@@ -1,6 +1,7 @@
 type Props = {
   error?: string
   children: React.ReactNode
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
 export function Form({error, children} : Props) {

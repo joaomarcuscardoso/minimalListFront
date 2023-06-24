@@ -2,18 +2,27 @@ import { ReactNode, useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "types/apiURL"
 import { useNavigate, useParams } from "react-router-dom"
-import { IContent } from "types"
+import { IContent, ILibrary, IReview, IUser } from "types"
 import { Form } from "components/Form"
-import { argv0 } from "process"
+import { useCookies } from "react-cookie"
+import { AiFillDelete } from "react-icons/ai"
+import { Button } from "components/Button"
 
 export function ContentScreen() {
   const { id } = useParams()
   const navegate = useNavigate()
+  const [cookies] = useCookies()
+  const user: IUser = cookies?.user as IUser
 
   const [content, setContent] = useState<IContent>()
   const [availableEpisode, setAvailableEpisode] = useState<number[]>([])
   const [selectedSeason, setSelectedSeason] = useState<number | undefined>()
   const [selectedEpisode, setSelectedEpisode] = useState<number | undefined>()
+  const [error, setError] = useState<string>()
+  const [title, setTitle] = useState("")
+  const [message, setMessage] = useState("")
+  const [rate, setRate] = useState(0)
+  const [spollier, setSpollier] = useState(false)
 
   useEffect(() => {
     if (id == undefined) navegate("/")
@@ -40,12 +49,86 @@ export function ContentScreen() {
     for (let i = 1; i <= epAvailable; i++) {
       available.push(i)
     }
+
     setAvailableEpisode(available)
-
-
-    console.log(availableEpisode)
-
   }, [selectedSeason])
+
+  const handleForm = () => {
+    if (content?.id == null) return
+    if (user?.id == null) {
+      setError("Você precisa estar logado para avaliar")
+      return
+    }
+
+    axios.post<IReview>(`${API_URL}/api/review`, {
+      idContent: content.id,
+      idUser: user.id,
+      title: title,
+      text: message,
+      rate: rate,
+      spollier: spollier,
+    })
+      .then((response) => {
+        response.data
+        alert("Review enviada com sucesso!")
+
+        clear()
+        navegate(0)
+      })
+      .catch((error) => {
+        alert("Erro ao enviar review")
+        clear()
+        navegate(0)
+        console.error(error)
+      })
+  }
+
+  const clear = () => {
+    setTitle("")
+    setMessage("")
+    setRate(0)
+    setSpollier(false)
+  }
+
+  const handleAddLibrary = () => {
+    if (!selectedEpisode || !selectedSeason) return
+    if (!user?.id) return
+    if (!content?.id) return
+
+    axios.post<ILibrary>(`${API_URL}/api/library`, {
+      idUser: user.id,
+      idContent: content.id,
+      episode: String(selectedEpisode),
+      seasonContent: String(selectedSeason),
+    })
+      .then((response) => {
+        response.data
+        alert("Adicionando conteúdo a sua biblioteca!")
+        clear()
+        navegate(0)
+      })
+      .catch((error) => {
+        alert("Erro ao salvar conteúdo a biblioteca")
+        clear()
+        navegate(0)
+        console.error(error)
+      })
+  }
+
+  const handleRemoveReview = (e: any, idReview: number) => {
+    // TODO: fazer delete review
+    axios.delete<IReview>(`${API_URL}/api/review/${idReview}`)
+      .then((response) => {
+        alert("Review deletada com sucesso!")
+        navegate(0)
+        return response.data
+      })
+      .catch((err) => {
+        console.error(err)
+        alert("Falha na operação")
+      })
+
+  }
 
   return (
     content && (
@@ -83,24 +166,28 @@ export function ContentScreen() {
                 <div className="button-container">
                   <div className="selects-container">
                     <Form>
-                      <div className="col-3 d-inline-flex">
-                        <select className="select-season form-select" onChange={(e) => setSelectedSeason(Number(e.target.value))}>
-                          <option value="" placeholder="Sem Temporada"></option>
-                          {content.contentSeason?.map((item, index) => (
-                            <option value={index + 1} key={index}>{index + 1} Temporada(s)</option>
-                          ))}
-                        </select>
-
-                        {availableEpisode.length > 0 && (
-                          <select className="select-ep form-select" onChange={(e) => setSelectedEpisode(Number(e.target.value))}>
-                            <option value="" placeholder="Sem Episódio"></option>
-                            {availableEpisode.map((item, index) => (
-                              <option value={item} key={index}>{item} Episódio(s)</option>
+                      <div className="row">
+                        <div className="col-4 col-sm-8 d-inline-flex">
+                          <select className="select-season form-select" onChange={(e) => setSelectedSeason(Number(e.target.value))}>
+                            <option value="" placeholder="Sem Temporada"></option>
+                            {content.contentSeason?.map((item, index) => (
+                              <option value={index + 1} key={index}>{index + 1} Temporada(s)</option>
                             ))}
                           </select>
-                        )}
+
+                          {availableEpisode.length > 0 && (
+                            <select className="select-ep form-select" onChange={(e) => setSelectedEpisode(Number(e.target.value))}>
+                              <option value="" placeholder="Sem Episódio"></option>
+                              {availableEpisode.map((item, index) => (
+                                <option value={item} key={index}>{item} Episódio(s)</option>
+                              ))}
+                            </select>
+                          )}
+                        </div>
+                        <div className="col-4">
+                          <button type="button" onClick={handleAddLibrary} className="btn btn-secondary">Adicionar a lista</button>
+                        </div>
                       </div>
-                      <button type="submit" className="btn btn-secondary">Adicionar a lista</button>
                     </Form>
                   </div>
                 </div>
@@ -109,19 +196,21 @@ export function ContentScreen() {
           </div>
           <div className="col-12">
             <div className="content-info-review">
-              <Form>
+              <Form
+                error={error}
+              >
                 <div className="row">
                   <div className="col-12">
                     <div className="row">
                       <div className="container-buttons">
                         <div className="col-9">
                           <label className="form-label">Titulo</label>
-                          <input type="text" name="title" className="form-control" placeholder="Título da review" />
+                          <input type="text" name="title" className="form-control" placeholder="Título da review" onChange={(e) => setTitle(String(e.target.value))} />
                         </div>
                         <div className="col-1"></div>
                         <div className="col-2">
                           <label className="form-label">Nota</label>
-                          <input type="number" name="rate" className="form-control" placeholder="0.0 á 5 notas" />
+                          <input type="number" name="rate" className="form-control" placeholder="0.0 á 5 notas" min={0} max={5} onChange={(e) => setRate(Number(e.target.value))} />
                         </div>
                       </div>
                     </div>
@@ -131,10 +220,10 @@ export function ContentScreen() {
                           <label className="form-label">Mensagem</label>
                           <div className="container-spollier">
                             <label className="form-label">Spollier</label>
-                            <input type="checkbox" className="form-check-input" name="spollier" />
+                            <input type="checkbox" className="form-check-input" name="spollier" onChange={(e) => setSpollier(Boolean(e))} />
                           </div>
                         </div>
-                        <textarea className="form-control" placeholder="Escreva sua review aqui" />
+                        <textarea className="form-control" placeholder="Escreva sua review aqui" onChange={(e) => setMessage(String(e.target.value))} />
                       </div>
                     </div>
                     <div className="row">
@@ -142,7 +231,7 @@ export function ContentScreen() {
                     <br />
                     <div className="row">
                       <div className="col-12">
-                        <button type="submit" className="form-control btn btn-secondary">Adicionar a review</button>
+                        <button type="button" onClick={handleForm} className="form-control btn btn-secondary">Adicionar a review</button>
                       </div>
                     </div>
                   </div>
@@ -151,6 +240,36 @@ export function ContentScreen() {
             </div>
           </div>
         </div>
+        {content.reviews?.map((item, index) => (
+          <>
+            <div className="row reviewRow p-1" key={index}>
+              <div className="d-inline-flex">
+                <div className="col-2">
+                  <img src={user.imagePathComplete} className="img-fluid roundend" />
+                </div>
+                <div className="col-9">
+
+                  <div className="review-container-info">
+                    <div className="row">
+                      <a href="" role="button" className={`${item.spollier ? "spollier" : ""}`}>
+                        <div className="col-11">
+                          <h3>{item.title} - <span>({item.rate})</span></h3>
+                          <p>{item.text}</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-1 icon-container">
+                  <Button type="button" classBtn="btn btn-danger" onClick={(e) => handleRemoveReview(e, item.id)}>
+                    <AiFillDelete />
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <br />
+          </>
+        ))}
       </div>
     )
   )
