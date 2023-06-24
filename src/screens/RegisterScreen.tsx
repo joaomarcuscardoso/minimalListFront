@@ -84,6 +84,16 @@ export function RegisterScreen() {
               setState={setEmail}
             />
             <ContentInput
+              label="nickname"
+              text="Nickname"
+              type="text"
+              placeholder="Digite seu nickname..."
+              name="nickname"
+              state={nickname}
+              setState={setNickname}
+              error={nicknameError}
+            />
+            <ContentInput
               label="pass"
               text="Senha"
               type="password"
@@ -92,16 +102,6 @@ export function RegisterScreen() {
               state={password}
               setState={setPassword}
               error={passwordError}
-            />
-            <ContentInput
-              label="pass"
-              text="Senha"
-              type="password"
-              placeholder="Digite sua senha..."
-              name="password"
-              state={nickname}
-              setState={setNickname}
-              error={nicknameError}
               required={true}
             />
 
