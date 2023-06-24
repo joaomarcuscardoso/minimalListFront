@@ -111,31 +111,38 @@ export function ContentScreen() {
             <div className="content-info-review">
               <Form>
                 <div className="row">
-                  <div className="col-10">
+                  <div className="col-12">
+                    <div className="row">
+                      <div className="container-buttons">
+                        <div className="col-9">
+                          <label className="form-label">Titulo</label>
+                          <input type="text" name="title" className="form-control" placeholder="Título da review" />
+                        </div>
+                        <div className="col-1"></div>
+                        <div className="col-2">
+                          <label className="form-label">Nota</label>
+                          <input type="number" name="rate" className="form-control" placeholder="0.0 á 5 notas" />
+                        </div>
+                      </div>
+                    </div>
                     <div className="row">
                       <div className="col-12">
-                        <label className="form-label">Titulo</label>
-                        <input type="text" name="title" className="form-control" placeholder="Título da review" />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-6">
-                        <label className="form-label">Mensagem</label>
+                        <div className="container-info">
+                          <label className="form-label">Mensagem</label>
+                          <div className="container-spollier">
+                            <label className="form-label">Spollier</label>
+                            <input type="checkbox" className="form-check-input" name="spollier" />
+                          </div>
+                        </div>
                         <textarea className="form-control" placeholder="Escreva sua review aqui" />
-
-                        <label className="form-label">Spollier</label>
-                        <input type="checkbox" className="form-check-input" name="spollier" />
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-1">
-                        <label className="form-label">Nota</label>
-                        <input type="number" name="rate" className="form-control" placeholder="0.0 a 5" />
-                      </div>
-                      <div className="col-1">
-                      </div>
-                      <div className="col-1">
-                        <button type="submit" className="btn btn-secondary">Adicionar a review</button>
+                    </div>
+                    <br />
+                    <div className="row">
+                      <div className="col-12">
+                        <button type="submit" className="form-control btn btn-secondary">Adicionar a review</button>
                       </div>
                     </div>
                   </div>
