@@ -42,6 +42,9 @@ export function Header() {
             <>
               <li className="nav-item"><a className="nav-link" id="link" onClick={handleLogout}>Logout</a></li>
               <li className="nav-item"><Link className="nav-link" to="/profile">Perfil</Link></li>
+              <li className="nav-item">
+                <Link to="/library" className="nav-link">Sua Biblioteca</Link>
+              </li>
             </>
           ) : (
             <>

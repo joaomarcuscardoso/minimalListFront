@@ -8,6 +8,7 @@ import { ReviewScreen } from "screens/ReviewScreen"
 import { LoginScreen } from "screens/LoginScreen"
 import { RegisterScreen } from "screens/RegisterScreen"
 import { ContentScreen } from "screens/ContentScreen"
+import { LibraryScreen } from "screens/LibraryScreen"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/review" element={<ReviewScreen />} />
+        <Route path="/library" element={<LibraryScreen />} />
         <Route path="/content/:id" element={<ContentScreen />} />
       </Routes>
     </>

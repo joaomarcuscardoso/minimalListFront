@@ -12,13 +12,13 @@ export type IUser = {
   updatedAt?: Date
   reviews?: IReview[]
   achievements?: IAchievements[]
-  library: ILibrary[]
+  libraries?: ILibrary[]
 }
 
 export type ILibrary = {
   id: number
   episode: number 
-  statusContent: string
+  seasonContent: string
   content: IContent
   user?: IUser
   createdAt?: Date
@@ -26,9 +26,11 @@ export type ILibrary = {
 }
 
 export type IReview = {
+  user: IUser
   id: number;
   title: string
   rate: number
+  imageProfile: string
   text: string
   spollier: boolean
   createdAt?: Date

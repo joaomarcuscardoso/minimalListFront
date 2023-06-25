@@ -25,7 +25,7 @@ export function ContentScreen() {
   const [spollier, setSpollier] = useState(false)
 
   useEffect(() => {
-    if (id === undefined) navegate("/")
+    if (id === undefined) navegate(0)
 
     axios.get<IContent>(`${API_URL}/api/content/find/${Number(id)}`)
       .then((response) => {
@@ -131,7 +131,6 @@ export function ContentScreen() {
         console.error(err)
         alert("Falha na operação")
       })
-
   }
 
   return (
@@ -187,7 +186,7 @@ export function ContentScreen() {
                             )}
                           </div>
                           <div className="col-4 col-sm-4">
-                            <button type="button" onClick={handleAddLibrary} className="btn btn-secondary">Adicionar a lista</button>
+                            <button type="button" onClick={handleAddLibrary} className="btn btn-primary">Adicionar a lista</button>
                           </div>
                         </div>
                       </Form>
@@ -247,7 +246,7 @@ export function ContentScreen() {
               <div className="row" key={index}>
                 <div className="d-inline-flex review-container-div">
                   <div className="img-review ">
-                    <img src={user.imagePathComplete} className="img-fluid roundend img-review" />
+                    <img src={item.imageProfile} className="img-fluid roundend img-review" />
                   </div>
                   <div className="col-10">
 

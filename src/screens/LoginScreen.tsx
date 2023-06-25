@@ -17,8 +17,10 @@ export function LoginScreen() {
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
 
-  const setUserCookie = (user: IUser) => {
-    setCookie("user", user, { path: "/"})
+  const setUserCookie = async (user: IUser) => {
+    setCookie("user", user, { path: "/" })
+
+    return cookies.user
   }
 
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,20 +34,21 @@ export function LoginScreen() {
         email: email,
         password: password
       })
-        .then(res => {
+        .then((res) => {
           setUserCookie(res.data)
-          navigate("/")
+          .then((user) => navigate("/"))
+          .catch(err => console.log(err))
 
         })
-        .catch((err: Error | AxiosError) => {
-          if (axios.isAxiosError(err)) {
-            if (err?.response?.data) {
-              console.log("err: ", err?.response?.data)
-              const { error, login }: IErrorMessage = err?.response?.data as IErrorMessage
-              setError(error)
+          .catch((err: Error | AxiosError) => {
+            if (axios.isAxiosError(err)) {
+              if (err?.response?.data) {
+                console.log("err: ", err?.response?.data)
+                const { error, login }: IErrorMessage = err?.response?.data as IErrorMessage
+                setError(error)
+              }
             }
-          }
-        })
+          })
     } else {
       // set form invalid feedback
       setPasswordError("Campo obrigatório")
@@ -54,42 +57,40 @@ export function LoginScreen() {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-3"></div>
-        <div className="col-md-6">
-          <h1 className="title h1">Acesse sua conta</h1>
-          <Form
-            error={error}
-          >
-            <ContentInput
-              label="email"
-              text="Email"
-              type="email"
-              placeholder="Digite seu email..."
-              name="email"
-              required={true}
-              state={email}
-              setState={setEmail}
-              error={emailError}
-            />
-            <ContentInput
-              label="password"
-              text="Senha"
-              type="password"
-              placeholder="Digite sua senha..."
-              required={true}
-              name="password"
-              state={password}
-              setState={setPassword}
-              error={passwordError}
-            />
-            <Button type="submit" classBtn="btn btn-primary" onClick={(e) => handleLogin(e)}>Entrar</Button>
-            <Button type="submit" classBtn="btn  btn-outline-primary" onClick={() => navigate("/register")}>Criar Conta</Button>
-          </Form>
-        </div>
-        <div className="col-md-3"></div>
+    <div className="row">
+      <div className="col-3"></div>
+      <div className="col-6">
+        <h1 className="title h1">Acesse sua conta</h1>
+        <Form
+          error={error}
+        >
+          <ContentInput
+            label="email"
+            text="Email"
+            type="email"
+            placeholder="Digite seu email..."
+            name="email"
+            required={true}
+            state={email}
+            setState={setEmail}
+            error={emailError}
+          />
+          <ContentInput
+            label="password"
+            text="Senha"
+            type="password"
+            placeholder="Digite sua senha..."
+            required={true}
+            name="password"
+            state={password}
+            setState={setPassword}
+            error={passwordError}
+          />
+          <Button type="submit" classBtn="btn btn-primary" onClick={(e) => handleLogin(e)}>Entrar</Button>
+          <Button type="submit" classBtn="btn  btn-outline-primary" onClick={() => navigate("/register")}>Criar Conta</Button>
+        </Form>
       </div>
+      <div className="col-3"></div>
     </div>
   )
 }
