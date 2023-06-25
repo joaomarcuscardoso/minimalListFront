@@ -11,21 +11,18 @@ import { ContentScreen } from "screens/ContentScreen"
 
 function App() {
   return (
-    <div className="container-fluid" id="container-app">
+    <>
       <Header />
 
-      <div className="container-fluid">
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/profile" element={<ProfileScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/review" element={<ReviewScreen />} />
-          <Route path="/content/:id" element={<ContentScreen />} />
-        </Routes>
-      </div>
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/review" element={<ReviewScreen />} />
+        <Route path="/content/:id" element={<ContentScreen />} />
+      </Routes>
+    </>
   )
 }
 

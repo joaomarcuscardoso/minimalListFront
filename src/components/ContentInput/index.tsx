@@ -36,7 +36,6 @@ export function ContentInput({
         </span>
       )}
       <div className="input-group">
-        {name == "nickname" && <span className="input-group-text" id="inputGroupPrepend">@</span>}
         <input
           type={type}
           name={name}

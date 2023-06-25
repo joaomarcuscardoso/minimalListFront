@@ -25,7 +25,7 @@ export function ContentScreen() {
   const [spollier, setSpollier] = useState(false)
 
   useEffect(() => {
-    if (id == undefined) navegate("/")
+    if (id === undefined) navegate("/")
 
     axios.get<IContent>(`${API_URL}/api/content/find/${Number(id)}`)
       .then((response) => {
@@ -38,8 +38,8 @@ export function ContentScreen() {
   }, [id])
 
   useEffect(() => {
-    if (selectedSeason == undefined) return
-    if (content == undefined) return
+    if (selectedSeason === undefined) return
+    if (content === undefined) return
 
     if (content.contentSeason.length < selectedSeason - 1) return
 
@@ -60,6 +60,11 @@ export function ContentScreen() {
       return
     }
 
+    if (rate < 0 || rate > 5) {
+      setError("Avalie de 0 a 5")
+      return
+    }
+
     axios.post<IReview>(`${API_URL}/api/review`, {
       idContent: content.id,
       idUser: user.id,
@@ -69,11 +74,11 @@ export function ContentScreen() {
       spollier: spollier,
     })
       .then((response) => {
-        response.data
         alert("Review enviada com sucesso!")
 
         clear()
         navegate(0)
+        return response.data
       })
       .catch((error) => {
         alert("Erro ao enviar review")
@@ -102,10 +107,10 @@ export function ContentScreen() {
       seasonContent: String(selectedSeason),
     })
       .then((response) => {
-        response.data
         alert("Adicionando conteúdo a sua biblioteca!")
         clear()
         navegate(0)
+        return response.data
       })
       .catch((error) => {
         alert("Erro ao salvar conteúdo a biblioteca")
@@ -116,7 +121,6 @@ export function ContentScreen() {
   }
 
   const handleRemoveReview = (e: any, idReview: number) => {
-    // TODO: fazer delete review
     axios.delete<IReview>(`${API_URL}/api/review/${idReview}`)
       .then((response) => {
         alert("Review deletada com sucesso!")
@@ -132,144 +136,143 @@ export function ContentScreen() {
 
   return (
     content && (
-      <div className="container-fluid" id="content-main">
-        <div className="row">
-          <div className="col-12">
-            <div className="content-container">
-              <img src={content.image} alt="Background" className="img-fluid" id="img-content" />
-              <div className="content-info">
-                <div className="content-container-mains">
-                  <div className="content-info-header">
-                    <h1>{content.name} - {content.season} Temporada(s)</h1>
+      <div className="container-fluid" id="container-content">
+        <div id="content-main">
+          <div className="row">
+            <div className="col-12">
+              <div className="content-container">
+                <img src={content.image} alt="Background" className="img-fluid" id="img-content" />
+                <div className="content-info">
+                  <h1>{content.name} - {content.season} Temporada(s)</h1>
+
+                  <div className="content-info-main">
+                    <p><strong>{content?.categoryName}</strong></p>
+                    <p><strong>-</strong></p>
+                    {
+                      content?.date ? (
+                        <p><strong>Lançamento em {content?.date.toString()}</strong></p>
+                      ) : (
+                        <p><strong>Não há data de lançamento</strong></p>
+                      )
+                    }
+                    <p><strong>-</strong></p>
+                    <p><strong>Ainda está sendo producido? {content.produce == true ? "Sim!" : "Não"}</strong></p>
                   </div>
-
-                </div>
-                <div className="content-info-main">
-                  <p><strong>{content?.categoryName}</strong></p>
-                  <p><strong>-</strong></p>
-                  {
-                    content?.date ? (
-                      <p><strong>Lançamento em {content?.date.toString()}</strong></p>
-                    ) : (
-                      <p><strong>Não há data de lançamento</strong></p>
-                    )
-                  }
-                  <p><strong>-</strong></p>
-                  <p><strong>Ainda está sendo producido? {content.produce == true ? "Sim!" : "Não"}</strong></p>
-                </div>
-                <div id="content-info-desc">
-                  <strong>Descrição</strong>
-                  <p>
-                    {content.description}
-                  </p>
-                </div>
-                <div className="button-container">
-                  <div className="selects-container">
-                    <Form>
-                      <div className="row">
-                        <div className="col-4 col-sm-8 d-inline-flex">
-                          <select className="select-season form-select" onChange={(e) => setSelectedSeason(Number(e.target.value))}>
-                            <option value="" placeholder="Sem Temporada"></option>
-                            {content.contentSeason?.map((item, index) => (
-                              <option value={index + 1} key={index}>{index + 1} Temporada(s)</option>
-                            ))}
-                          </select>
-
-                          {availableEpisode.length > 0 && (
-                            <select className="select-ep form-select" onChange={(e) => setSelectedEpisode(Number(e.target.value))}>
-                              <option value="" placeholder="Sem Episódio"></option>
-                              {availableEpisode.map((item, index) => (
-                                <option value={item} key={index}>{item} Episódio(s)</option>
+                  <div id="content-info-desc">
+                    <strong>Descrição</strong>
+                    <br/>
+                    <p>
+                      {content.description}
+                    </p>
+                  </div>
+                  <div className="button-container">
+                    <div className="selects-container">
+                      <Form>
+                        <div className="row">
+                          <div className="col-4 col-sm-8 d-inline-flex">
+                            <select className="select-season form-select" onChange={(e) => setSelectedSeason(Number(e.target.value))}>
+                              <option value="" placeholder="Sem Temporada"></option>
+                              {content.contentSeason?.map((item, index) => (
+                                <option value={index + 1} key={index}>{index + 1} Temporada(s)</option>
                               ))}
                             </select>
-                          )}
-                        </div>
-                        <div className="col-4">
-                          <button type="button" onClick={handleAddLibrary} className="btn btn-secondary">Adicionar a lista</button>
-                        </div>
-                      </div>
-                    </Form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-12">
-            <div className="content-info-review">
-              <Form
-                error={error}
-              >
-                <div className="row">
-                  <div className="col-12">
-                    <div className="row">
-                      <div className="container-buttons">
-                        <div className="col-9">
-                          <label className="form-label">Titulo</label>
-                          <input type="text" name="title" className="form-control" placeholder="Título da review" onChange={(e) => setTitle(String(e.target.value))} />
-                        </div>
-                        <div className="col-1"></div>
-                        <div className="col-2">
-                          <label className="form-label">Nota</label>
-                          <input type="number" name="rate" className="form-control" placeholder="0.0 á 5 notas" min={0} max={5} onChange={(e) => setRate(Number(e.target.value))} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-info">
-                          <label className="form-label">Mensagem</label>
-                          <div className="container-spollier">
-                            <label className="form-label">Spollier</label>
-                            <input type="checkbox" className="form-check-input" name="spollier" onChange={(e) => setSpollier(Boolean(e))} />
+
+                            {availableEpisode.length > 0 && (
+                              <select className="select-ep form-select" onChange={(e) => setSelectedEpisode(Number(e.target.value))}>
+                                <option value="" placeholder="Sem Episódio"></option>
+                                {availableEpisode.map((item, index) => (
+                                  <option value={item} key={index}>{item} Episódio(s)</option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                          <div className="col-4 col-sm-4">
+                            <button type="button" onClick={handleAddLibrary} className="btn btn-secondary">Adicionar a lista</button>
                           </div>
                         </div>
-                        <textarea className="form-control" placeholder="Escreva sua review aqui" onChange={(e) => setMessage(String(e.target.value))} />
-                      </div>
-                    </div>
-                    <div className="row">
-                    </div>
-                    <br />
-                    <div className="row">
-                      <div className="col-12">
-                        <button type="button" onClick={handleForm} className="form-control btn btn-secondary">Adicionar a review</button>
-                      </div>
+                      </Form>
                     </div>
                   </div>
-                </div>
-              </Form>
-            </div>
-          </div>
-        </div>
-        {content.reviews?.map((item, index) => (
-          <>
-            <div className="row reviewRow p-1" key={index}>
-              <div className="d-inline-flex">
-                <div className="col-2">
-                  <img src={user.imagePathComplete} className="img-fluid roundend" />
-                </div>
-                <div className="col-9">
-
-                  <div className="review-container-info">
-                    <div className="row">
-                      <a href="" role="button" className={`${item.spollier ? "spollier" : ""}`}>
-                        <div className="col-11">
-                          <h3>{item.title} - <span>({item.rate})</span></h3>
-                          <p>{item.text}</p>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-1 icon-container">
-                  <Button type="button" classBtn="btn btn-danger" onClick={(e) => handleRemoveReview(e, item.id)}>
-                    <AiFillDelete />
-                  </Button>
                 </div>
               </div>
             </div>
-            <br />
-          </>
-        ))}
+            <div className="col-12">
+              <div className="content-info-review">
+                <Form
+                  error={error}
+                >
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="row">
+                        <div className="container-buttons">
+                          <div className="col-9">
+                            <label className="form-label">Titulo</label>
+                            <input type="text" name="title" className="form-control" placeholder="Título da review" onChange={(e) => setTitle(String(e.target.value))} />
+                          </div>
+                          <div className="col-1"></div>
+                          <div className="col-2">
+                            <label className="form-label">Nota</label>
+                            <input type="number" name="rate" className="form-control" placeholder="0.0 á 5 notas" min={0} max={5} onChange={(e) => setRate(Number(e.target.value))} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="container-info">
+                            <label className="form-label">Mensagem</label>
+                            <div className="container-spollier">
+                              <label className="form-label">Spollier</label>
+                              <input type="checkbox" className="form-check-input" name="spollier" onChange={(e) => setSpollier(Boolean(e))} />
+                            </div>
+                          </div>
+                          <textarea className="form-control" placeholder="Escreva sua review aqui" onChange={(e) => setMessage(String(e.target.value))} />
+                        </div>
+                      </div>
+                      <div className="row">
+                      </div>
+                      <br />
+                      <div className="row">
+                        <div className="col-12">
+                          <button type="button" onClick={handleForm} className="form-control btn btn-primary">Adicionar a review</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Form>
+              </div>
+            </div>
+          </div>
+          {content.reviews?.map((item, index) => (
+            <>
+              <div className="row" key={index}>
+                <div className="d-inline-flex review-container-div">
+                  <div className="img-review ">
+                    <img src={user.imagePathComplete} className="img-fluid roundend img-review" />
+                  </div>
+                  <div className="col-10">
+
+                    <div className="review-container-info">
+                      <div className="row">
+                        <a href="" role="button" className={`${item.spollier ? "spollier" : ""}`}>
+                          <div className="col-11">
+                            <h3>{item.title} - <span>({item.rate})</span></h3>
+                            <p>{item.text}</p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-1">
+                    <Button type="button" classBtn="btn btn-danger icon-container" onClick={(e) => handleRemoveReview(e, item.id)}>
+                      <AiFillDelete />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <br />
+            </>
+          ))}
+        </div>
       </div>
     )
   )
