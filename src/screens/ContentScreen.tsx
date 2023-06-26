@@ -155,7 +155,7 @@ export function ContentScreen() {
                       )
                     }
                     <p><strong>-</strong></p>
-                    <p><strong>Ainda está sendo producido? {content.produce == true ? "Sim!" : "Não"}</strong></p>
+                    <p><strong>Ainda está sendo produzido? {content.produce == true ? "Sim!" : "Não"}</strong></p>
                   </div>
                   <div id="content-info-desc">
                     <strong>Descrição</strong>

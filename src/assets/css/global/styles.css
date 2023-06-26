@@ -368,3 +368,18 @@ footer {
 .subtitle-lb {
   color: #fff;
 }
+
+.profile-container{
+  background-color: #303030;
+  color: #fff;
+  padding: 15px;
+  min-height: 355px;
+  display: inline-block;
+}
+
+.divider{
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+.emphasis{
+  border-top: 10px solid transparent;
+}
