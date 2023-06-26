@@ -372,9 +372,12 @@ footer {
 .profile-container{
   background-color: #303030;
   color: #fff;
+  margin: auto;
+  width: 200%;
   padding: 15px;
-  min-height: 355px;
+  min-height: 300px;
   display: inline-block;
+  justify-content: center;
 }
 
 .divider{
@@ -382,4 +385,5 @@ footer {
 }
 .emphasis{
   border-top: 10px solid transparent;
+  width: 10%;
 }
