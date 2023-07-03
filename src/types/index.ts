@@ -31,6 +31,7 @@ export type IReview = {
   title: string
   rate: number
   imageProfile: string
+  userId: number;
   text: string
   spollier: boolean
   createdAt?: Date

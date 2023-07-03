@@ -246,7 +246,7 @@ export function ContentScreen() {
               <div className="row" key={index}>
                 <div className="d-inline-flex review-container-div">
                   <div className="img-review ">
-                    <img src={item.imageProfile} className="img-fluid roundend img-review" />
+                    <img src={item?.imageProfile} alt="imagem perfil" className="img-fluid roundend img-review" />
                   </div>
                   <div className="col-10">
 
@@ -262,9 +262,11 @@ export function ContentScreen() {
                     </div>
                   </div>
                   <div className="col-1">
-                    <Button type="button" classBtn="btn btn-danger icon-container" onClick={(e) => handleRemoveReview(e, item.id)}>
-                      <AiFillDelete />
-                    </Button>
+                    {item?.userId === user.id && (
+                      <Button type="button" classBtn="btn btn-danger icon-container" onClick={(e) => handleRemoveReview(e, item.id)}>
+                        <AiFillDelete />
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

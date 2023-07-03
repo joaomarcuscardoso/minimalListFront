@@ -298,6 +298,7 @@ footer {
   margin-left: 5px;
   width: 100px;
   padding: 2px;
+  border-radius: 50px;
 }
 .review-container-info {
   margin-left: 20px;
